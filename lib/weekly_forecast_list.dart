@@ -34,6 +34,7 @@ class WeeklyForecastList extends StatelessWidget {
                           ),
                           style: textTheme.headlineMedium,
                         ),
+                        Text(weeklyForecast.time!.elementAt(index)),
                         const SizedBox(height: 10.0),
                         Text(WeatherCode.fromInt(
                                 weeklyForecast.weatherCode?.elementAt(index) ??
@@ -61,7 +62,7 @@ class WeeklyForecastList extends StatelessWidget {
 
   Widget _buildImageOverlay(
       BuildContext context, TextTheme textTheme, int index) {
-    final imageSize = MediaQuery.of(context).size.width * 0.3;
+    final imageSize = MediaQuery.of(context).size.width * 0.27;
     return SizedBox(
       height: imageSize,
       width: imageSize,
