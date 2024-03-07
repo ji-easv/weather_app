@@ -11,7 +11,10 @@ class WeatherApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // This is the theme of your application.
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Colors.blueGrey,
+        primaryColorDark: Colors.blueGrey[700],
+      ),
       // Scrolling in Flutter behaves differently depending on the
       // ScrollBehavior. By default, ScrollBehavior changes depending
       // on the current platform. For the purposes of this scrolling
@@ -19,7 +22,7 @@ class WeatherApp extends StatelessWidget {
       // experience is the same for everyone - regardless of the
       // platform they are using.
       scrollBehavior: const ConstantScrollBehavior(),
-      title: 'Horizons Weather',
+      title: 'Weather',
       home: const WeeklyForecastScreen(),
     );
   }
