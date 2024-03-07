@@ -1,4 +1,3 @@
-
 class WeeklyForecastDto {
   double? latitude;
   double? longitude;
