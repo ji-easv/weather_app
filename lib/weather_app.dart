@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/chart_screen.dart';
 
 import 'weekly_forecast_screen.dart';
 
-class WeatherApp extends StatelessWidget {
+class WeatherApp extends StatefulWidget {
   const WeatherApp({super.key});
+
+  @override
+  State<WeatherApp> createState() => _WeatherAppState();
+}
+
+class _WeatherAppState extends State<WeatherApp> {
+  final List<Widget> _screens = [
+    const WeeklyForecastScreen(),
+    const ChartScreen(),
+  ];
+  int _currentIndex = 0;
 
   // This widget is the root of your application.
   @override
@@ -23,7 +35,27 @@ class WeatherApp extends StatelessWidget {
       // platform they are using.
       scrollBehavior: const ConstantScrollBehavior(),
       title: 'Weather',
-      home: const WeeklyForecastScreen(),
+      home: Scaffold(
+          body: _screens.elementAt(_currentIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.thermostat),
+                label: 'Forecast',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.show_chart),
+                label: 'Chart',
+              ),
+            ],
+
+            onTap: (int index) => {
+              setState(() {
+                _currentIndex = index;
+              })
+            }
+          ),
+      ),
     );
   }
 }

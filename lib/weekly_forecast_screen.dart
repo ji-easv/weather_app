@@ -10,20 +10,18 @@ class WeeklyForecastScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: context.read<DataSource>().getWeeklyForecast(),
-        builder: (context, snapshot) => CustomScrollView(
-          slivers: <Widget>[
-            const WeatherSliverAppBar(),
-            if (snapshot.hasData)
-              WeeklyForecastList(weeklyForecastDto: snapshot.data!)
-            else if (snapshot.hasError)
-              _buildErrorWidget(context, snapshot.error!)
-            else
-              _buildLoadingWidget(context)
-          ],
-        ),
+    return FutureBuilder(
+      future: context.read<DataSource>().getWeeklyForecast(),
+      builder: (context, snapshot) => CustomScrollView(
+        slivers: <Widget>[
+          const WeatherSliverAppBar(),
+          if (snapshot.hasData)
+            WeeklyForecastList(weeklyForecastDto: snapshot.data!)
+          else if (snapshot.hasError)
+            _buildErrorWidget(context, snapshot.error!)
+          else
+            _buildLoadingWidget(context)
+        ],
       ),
     );
   }
