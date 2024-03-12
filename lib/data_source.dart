@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 abstract class DataSource {
   Future<WeeklyForecastDto> getWeeklyForecast();
+  Future<WeatherChartData> getChartData();
 }
 
 class FakeDataSource implements DataSource {
@@ -13,6 +14,12 @@ class FakeDataSource implements DataSource {
   Future<WeeklyForecastDto> getWeeklyForecast() async {
     final json = await rootBundle.loadString('assets/weekly_forecast.json');
     return WeeklyForecastDto.fromJson(jsonDecode(json));
+  }
+
+  @override
+  Future<WeatherChartData> getChartData() async {
+    final json = await rootBundle.loadString("assets/chart_data.json");
+    return WeatherChartData.fromJson(jsonDecode(json));
   }
 }
 
@@ -26,5 +33,12 @@ class RealDataSource implements DataSource {
     } else {
       throw Exception('Failed to load weekly forecast');
     }
+  }
+
+  @override
+  Future<WeatherChartData> getChartData() async {
+    const apiUrl = "REPLACE THIS WITH THE URL YOU COPIED";
+    final response = await http.get(Uri.parse(apiUrl));
+    return WeatherChartData.fromJson(jsonDecode(response.body));
   }
 }
