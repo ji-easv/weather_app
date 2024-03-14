@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'package:weather_app/models/daily_forecast_dto.dart';
 import 'package:weather_app/models/models.dart';
 import 'package:http/http.dart' as http;
 
 abstract class DataSource {
   Future<WeeklyForecastDto> getWeeklyForecast();
-
   Future<WeatherChartData> getChartData();
-// Future getHourlyForecast(DateTime date); // TODO: Implement hourly forecast
+  Future<DailyForecastDto> getDailyForecast(DateTime date); // TODO: Implement hourly forecast
 }
 
 class FakeDataSource implements DataSource {
@@ -23,6 +23,12 @@ class FakeDataSource implements DataSource {
   Future<WeatherChartData> getChartData() async {
     final json = await rootBundle.loadString("assets/chart_data.json");
     return WeatherChartData.fromJson(jsonDecode(json));
+  }
+
+  @override
+  Future<DailyForecastDto> getDailyForecast(DateTime date) async {
+    final json = await rootBundle.loadString("assets/hourly_forecast.json");
+    return DailyForecastDto.fromJson(jsonDecode(json));
   }
 }
 
@@ -48,6 +54,12 @@ class RealDataSource implements DataSource {
         location, ['temperature_2m_max', 'temperature_2m_min']);
     final response = await http.get(apiUrl);
     return WeatherChartData.fromJson(jsonDecode(response.body));
+  }
+
+  @override
+  Future<DailyForecastDto> getDailyForecast(DateTime date) {
+    // TODO: implement getHourlyForecast
+    throw UnimplementedError();
   }
 }
 

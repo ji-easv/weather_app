@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/models.dart';
 
+import '../daily_forecast/daily_forecast_screen.dart';
+
 class WeeklyForecastList extends StatelessWidget {
   final WeeklyForecastDto weeklyForecastDto;
 
@@ -14,42 +16,53 @@ class WeeklyForecastList extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final Daily weeklyForecast = weeklyForecastDto.daily!;
-          return Card(
-            child: Row(
-              children: <Widget>[
-                _buildImageOverlay(context, textTheme, index),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _weekdayAsString(
-                            DateTime.parse(
-                              weeklyForecast.time!.elementAt(index),
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DailyForecastScreen(
+                    dateString: weeklyForecast.time!.elementAt(index),
+                  ),
+                )
+              );
+            },
+            child: Card(
+              child: Row(
+                children: <Widget>[
+                  _buildImageOverlay(context, textTheme, index),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            _weekdayAsString(
+                              DateTime.parse(
+                                weeklyForecast.time!.elementAt(index),
+                              ),
                             ),
+                            style: textTheme.headlineMedium,
                           ),
-                          style: textTheme.headlineMedium,
-                        ),
-                        Text(weeklyForecast.time!.elementAt(index)),
-                        const SizedBox(height: 10.0),
-                        Text(WeatherCode.fromInt(
-                                weeklyForecast.weatherCode?.elementAt(index) ??
-                                    0)
-                            .description),
-                      ],
+                          Text(weeklyForecast.time!.elementAt(index)),
+                          const SizedBox(height: 10.0),
+                          Text(WeatherCode.fromInt(
+                                  weeklyForecast.weatherCode?.elementAt(index) ??
+                                      0)
+                              .description),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    '${weeklyForecast.temperature2MMax!.elementAt(index)} | ${weeklyForecast.temperature2MMin!.elementAt(index)} C',
-                    style: textTheme.titleMedium,
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      '${weeklyForecast.temperature2MMax!.elementAt(index)} | ${weeklyForecast.temperature2MMin!.elementAt(index)} C',
+                      style: textTheme.titleMedium,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
