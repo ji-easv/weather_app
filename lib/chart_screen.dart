@@ -20,7 +20,7 @@ class ChartScreen extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text('Daily Weather Variables'),
+              child: Text('Temperatures'),
             ),
             Expanded(
               child: charts.TimeSeriesChart(
