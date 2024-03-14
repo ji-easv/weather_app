@@ -3,8 +3,8 @@ import 'package:community_charts_flutter/community_charts_flutter.dart'
     as charts;
 import 'package:provider/provider.dart';
 
-import 'data_source.dart';
-import 'models.dart';
+import '../data_source.dart';
+import '../models/models.dart';
 
 class ChartScreen extends StatelessWidget {
   const ChartScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/chart_screen.dart';
+import 'package:weather_app/screens/chart_screen.dart';
 
-import 'weekly_forecast_screen.dart';
+import 'screens/weekly_forecast/weekly_forecast_screen.dart';
 
 class WeatherApp extends StatefulWidget {
   const WeatherApp({super.key});

@@ -6,6 +6,7 @@ class WeeklyForecastDto {
   String? timezone;
   String? timezoneAbbreviation;
   int? elevation;
+
   DailyUnits? dailyUnits;
   Daily? daily;
 
