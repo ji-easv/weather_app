@@ -26,6 +26,9 @@ class _WeatherAppState extends State<WeatherApp> {
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xFF6485f9),
         primaryColorDark: const Color(0xFF4967fb),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6485f9),
+        ),
       ),
       // Scrolling in Flutter behaves differently depending on the
       // ScrollBehavior. By default, ScrollBehavior changes depending
@@ -38,6 +41,7 @@ class _WeatherAppState extends State<WeatherApp> {
       home: Scaffold(
         body: _screens.elementAt(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.thermostat),
@@ -48,11 +52,11 @@ class _WeatherAppState extends State<WeatherApp> {
                 label: 'Chart',
               ),
             ],
-            onTap: (int index) => {
-                  setState(() {
-                    _currentIndex = index;
-                  })
-                }),
+            onTap: (int index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            }),
       ),
     );
   }

@@ -26,8 +26,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('City Name',
-                  style: Theme.of(context).textTheme.headlineLarge),
+              Text('Esbjerg', style: Theme.of(context).textTheme.headlineLarge),
               Text(
                 weeklyForecastForThisDay.time!,
                 style: Theme.of(context).textTheme.bodyMedium,

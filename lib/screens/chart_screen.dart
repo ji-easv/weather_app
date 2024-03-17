@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:community_charts_flutter/community_charts_flutter.dart'
     as charts;
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data_source.dart';
@@ -27,7 +27,7 @@ class ChartScreen extends StatelessWidget {
                 [
                   for (final variable in variables)
                     charts.Series<TimeSeriesDatum, DateTime>(
-                      id: '${variable.name} ${variable.unit}',
+                      id: '${variable.name.split('_').last} ${variable.unit}',
                       domainFn: (datum, _) => datum.domain,
                       measureFn: (datum, _) => datum.measure,
                       data: variable.values,
