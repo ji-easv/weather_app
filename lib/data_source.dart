@@ -64,6 +64,7 @@ class RealDataSource implements DataSource {
 }
 
 Uri _getDailyApiCall(LocationData locationData, List<String> variables) {
+  // https://api.open-meteo.com/v1/forecast?latitude=55.4703&longitude=8.4519&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,daylight_duration&timezone=Europe%2FBerlin
   return Uri.https("api.open-meteo.com", '/v1/forecast', {
     'latitude': '${locationData.latitude}',
     'longitude': '${locationData.longitude}',

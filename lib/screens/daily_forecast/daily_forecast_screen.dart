@@ -37,9 +37,24 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Daily Forecast for ${widget.dateString}',
-                  style: Theme.of(context).textTheme.headline6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 60),
+                    Text('City Name',
+                        style: Theme.of(context).textTheme.headlineLarge),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      widget.dateString,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    _buildFirstRow(context),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -47,5 +62,35 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
         ),
       ),
     );
+  }
+
+  Row _buildFirstRow(BuildContext context) {
+    return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: Image.network(
+                                'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-01-1024.png'),
+                          ),
+                          Text(
+                            '26',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text('Max',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                          Text('Min',
+                              style: Theme.of(context).textTheme.bodyMedium),
+                        ],
+                      ),
+                    ],
+                  );
   }
 }

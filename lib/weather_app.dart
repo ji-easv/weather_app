@@ -37,7 +37,8 @@ class _WeatherAppState extends State<WeatherApp> {
       scrollBehavior: const ConstantScrollBehavior(),
       title: 'Weather',
       home: Scaffold(
-          body: _screens.elementAt(_currentIndex),
+          body: const DailyForecastScreen(dateString: '2024-03-14'),
+          // _screens.elementAt(_currentIndex), TODO: revert
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
