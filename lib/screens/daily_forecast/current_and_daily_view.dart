@@ -48,10 +48,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
     final SharedUtilityComponents shared = SharedUtilityComponents();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: Colors.grey[200],
-      ),
+      decoration: shared.getCardDecoration(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -97,10 +94,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
     final SharedUtilityComponents shared = SharedUtilityComponents();
     Current? current = currentWeatherDto?.current;
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: Colors.grey[200],
-      ),
+      decoration: shared.getCardDecoration(),
       padding: const EdgeInsets.all(8),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

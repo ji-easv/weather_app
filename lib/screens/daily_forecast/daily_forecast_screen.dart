@@ -49,17 +49,20 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
   Widget build(BuildContext context) {
     return RefreshIndicator.adaptive(
       onRefresh: loadForecast,
-      child: CustomScrollView(
-        slivers: [
-          const WeatherSliverAppBar(title: 'Daily Forecast'),
-          CurrentAndDailyOverview(
-            currentWeatherController: currentWeatherController,
-            weeklyForecastForThisDay: widget.weeklyForecastForThisDay!,
-          ),
-          HourlyForecastList(
-            hourlyForecastController: hourlyForecastController,
-          ),
-        ],
+      child: Container(
+        color: Theme.of(context).colorScheme.background,
+        child: CustomScrollView(
+          slivers: [
+            const WeatherSliverAppBar(title: 'Daily Forecast'),
+            CurrentAndDailyOverview(
+              currentWeatherController: currentWeatherController,
+              weeklyForecastForThisDay: widget.weeklyForecastForThisDay!,
+            ),
+            HourlyForecastList(
+              hourlyForecastController: hourlyForecastController,
+            ),
+          ],
+        ),
       ),
     );
   }

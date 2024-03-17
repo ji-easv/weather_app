@@ -19,15 +19,13 @@ class HourlyForecastList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Container(
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              color: Colors.grey[200],
-            ),
+            decoration: SharedUtilityComponents().getCardDecoration(),
             child: Column(
-              children: snapshot.data!.forecastForOneHourList
-                  .map(
-                      (forecast) => _buildHourlyForecastItem(context, forecast))
-                  .toList(),
+              children: snapshot.data?.forecastForOneHourList
+                      .map((forecast) =>
+                          _buildHourlyForecastItem(context, forecast))
+                      .toList() ??
+                  [],
             ),
           ),
         ),

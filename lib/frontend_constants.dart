@@ -31,5 +31,4 @@ class WeatherCodeImages {
       'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-24-1024.png';  
   static const String thunderstorm = 
       'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-08-1024.png';    
-      
 }

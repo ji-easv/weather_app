@@ -23,9 +23,9 @@ class _WeatherAppState extends State<WeatherApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       // This is the theme of your application.
-      theme: ThemeData.dark().copyWith(
-        primaryColor: Colors.blueGrey,
-        primaryColorDark: Colors.blueGrey[700],
+      theme: ThemeData.light().copyWith(
+        primaryColor: const Color(0xFF6485f9),
+        primaryColorDark: const Color(0xFF4967fb),
       ),
       // Scrolling in Flutter behaves differently depending on the
       // ScrollBehavior. By default, ScrollBehavior changes depending

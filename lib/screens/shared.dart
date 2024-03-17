@@ -68,6 +68,22 @@ class SharedUtilityComponents {
     );
   }
 
+  BoxDecoration getCardDecoration() {
+    return const BoxDecoration(
+      borderRadius: BorderRadius.all(
+        Radius.circular(16),
+      ),
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12, // this is a very light shadow
+          blurRadius: 5, // this is the spread of the shadow
+          offset: Offset(0, 0), // this is the position of the shadow
+        ),
+      ],
+    );
+  }
+
   String getImageUrlByWeatherCode(int weatherCode) {
     String url = '';
     switch (weatherCode) {
@@ -81,6 +97,7 @@ class SharedUtilityComponents {
       case 2:
         url = WeatherCodeImages.partlyCloudy;
         break;
+
       // Overcast
       case 3:
         url = WeatherCodeImages.overcast;
@@ -105,12 +122,15 @@ class SharedUtilityComponents {
       // Rain slight and moderate intensity
       case 61:
       case 63:
+      case 80:
+      case 81:
         url = WeatherCodeImages.slightModerateRain;
         break;
 
       // Rain heavy intensity and freezing rain
       case 65:
       case 66:
+      case 82:
         url = WeatherCodeImages.heavyRain;
         break;
 

@@ -27,7 +27,21 @@ class WeeklyForecastList extends StatelessWidget {
                 ),
               ));
             },
-            child: Card(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16),
+                ),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12, // this is a very light shadow
+                    blurRadius: 2, // this is the spread of the shadow
+                    offset: Offset(0, 0), // this is the position of the shadow
+                  ),
+                ],
+              ),
               child: Row(
                 children: <Widget>[
                   _buildImageOverlay(context, textTheme, index),
@@ -43,7 +57,7 @@ class WeeklyForecastList extends StatelessWidget {
                                 weeklyForecast.time!.elementAt(index),
                               ),
                             ),
-                            style: textTheme.headlineMedium,
+                            style: textTheme.headlineSmall,
                           ),
                           Text(weeklyForecast.time!.elementAt(index)),
                           const SizedBox(height: 10.0),
@@ -74,7 +88,7 @@ class WeeklyForecastList extends StatelessWidget {
 
   Widget _buildImageOverlay(
       BuildContext context, TextTheme textTheme, int index) {
-    final imageSize = MediaQuery.of(context).size.width * 0.27;
+    final imageSize = MediaQuery.of(context).size.width * 0.20;
     final SharedUtilityComponents shared = SharedUtilityComponents();
     return SizedBox(
       height: imageSize,
@@ -90,7 +104,7 @@ class WeeklyForecastList extends StatelessWidget {
             position: DecorationPosition.foreground,
             decoration: BoxDecoration(
               gradient: RadialGradient(
-                colors: <Color>[Colors.grey[800]!, Colors.transparent],
+                colors: <Color>[Colors.grey[300]!, Colors.transparent],
               ),
             ),
             child: _getImageByWeatherCode(
