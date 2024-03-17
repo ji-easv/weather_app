@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/screens/chart_screen.dart';
-import 'package:weather_app/screens/daily_forecast/daily_forecast_screen.dart';
 
 import 'screens/weekly_forecast/weekly_forecast_screen.dart';
 
@@ -37,9 +36,8 @@ class _WeatherAppState extends State<WeatherApp> {
       scrollBehavior: const ConstantScrollBehavior(),
       title: 'Weather',
       home: Scaffold(
-          body: const DailyForecastScreen(dateString: '2024-03-14'),
-          // _screens.elementAt(_currentIndex), TODO: revert
-          bottomNavigationBar: BottomNavigationBar(
+        body: _screens.elementAt(_currentIndex),
+        bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.thermostat),
@@ -50,13 +48,11 @@ class _WeatherAppState extends State<WeatherApp> {
                 label: 'Chart',
               ),
             ],
-
             onTap: (int index) => {
-              setState(() {
-                _currentIndex = index;
-              })
-            }
-          ),
+                  setState(() {
+                    _currentIndex = index;
+                  })
+                }),
       ),
     );
   }

@@ -19,13 +19,12 @@ class WeeklyForecastList extends StatelessWidget {
           final Daily weeklyForecast = weeklyForecastDto.daily!;
           return GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DailyForecastScreen(
-                    dateString: weeklyForecast.time!.elementAt(index),
-                  ),
-                )
-              );
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DailyForecastScreen(
+                  weeklyForecastForThisDay:
+                      weeklyForecastDto.dailyForecast.elementAt(index),
+                ),
+              ));
             },
             child: Card(
               child: Row(
@@ -47,9 +46,9 @@ class WeeklyForecastList extends StatelessWidget {
                           ),
                           Text(weeklyForecast.time!.elementAt(index)),
                           const SizedBox(height: 10.0),
-                          Text(WeatherCode.fromInt(
-                                  weeklyForecast.weatherCode?.elementAt(index) ??
-                                      0)
+                          Text(WeatherCode.fromInt(weeklyForecast.weatherCode
+                                      ?.elementAt(index) ??
+                                  0)
                               .description),
                         ],
                       ),

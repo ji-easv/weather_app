@@ -1,16 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/models/daily_forecast_dto.dart';
 
 import '../../data_source.dart';
 import '../../frontend_constants.dart';
+import '../../models/weekly_forecast.dart';
 
 class DailyForecastScreen extends StatefulWidget {
-  final String dateString;
-
-  const DailyForecastScreen({super.key, required this.dateString});
+  final ForecastForOneDay?
+      weeklyForecastForThisDay; // comes from the weekly forecast
+  const DailyForecastScreen(
+      {super.key, required this.weeklyForecastForThisDay});
 
   @override
   State<DailyForecastScreen> createState() => _DailyForecastScreenState();
@@ -18,13 +21,14 @@ class DailyForecastScreen extends StatefulWidget {
 
 class _DailyForecastScreenState extends State<DailyForecastScreen> {
   final controller = StreamController<DailyForecastDto>();
+  LocationData? location;
 
   Future<void> loadForecast() async {
-    final future = context
-        .read<DataSource>()
-        .getDailyForecast(DateTime.parse(widget.dateString));
+    final future = context.read<DataSource>().getHourlyForecast(
+        DateTime.parse(widget.weeklyForecastForThisDay!.time!));
     controller.addStream(future.asStream());
     await future;
+    location = await Location.instance.getLocation();
   }
 
   @override
@@ -45,15 +49,15 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
                     Text('City Name',
                         style: Theme.of(context).textTheme.headlineLarge),
                     Text(
-                      widget.dateString,
+                      widget.weeklyForecastForThisDay!.time!,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     _spacer(),
-                    _buildFirstRow(context),
+                    _buildFirstRow(context, snapshot),
                     _spacer(),
-                    _buildDailyOverview(context),
+                    _buildDailyOverview(context, snapshot.data),
                     _spacer(),
-                    _buildHourlyForecast(context),
+                    _buildHourlyForecast(context, snapshot),
                   ],
                 ),
               ),
@@ -64,7 +68,8 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
     );
   }
 
-  Widget _buildDailyOverview(BuildContext context) {
+  Widget _buildDailyOverview(
+      BuildContext context, DailyForecastDto? dailyForecast) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
@@ -79,8 +84,17 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _textWithIcon(
-                    'Sunrise', DailyForecastIcons.sunrise, context, 50),
-                _textWithIcon('Sunset', DailyForecastIcons.sunset, context, 50),
+                    _extractTimeOutOfISODateString(
+                        widget.weeklyForecastForThisDay!.sunrise!),
+                    DailyForecastIcons.sunrise,
+                    context,
+                    50),
+                _textWithIcon(
+                    _extractTimeOutOfISODateString(
+                        widget.weeklyForecastForThisDay!.sunset!),
+                    DailyForecastIcons.sunset,
+                    context,
+                    50),
               ],
             ),
             _spacer(),
@@ -91,9 +105,9 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _darkText('Wind km/h', context),
+                      _darkText("${"wind"} km/h", context),
                       _divider(),
-                      _darkText('Gusts km/h', context),
+                      _darkText("${"gusts"} km/h", context),
                     ],
                   ),
                 ),
@@ -116,7 +130,8 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
     );
   }
 
-  Widget _buildFirstRow(BuildContext context) {
+  Widget _buildFirstRow(
+      BuildContext context, AsyncSnapshot<DailyForecastDto> snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
       decoration: BoxDecoration(
@@ -148,9 +163,13 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
           Expanded(
             child: Column(
               children: <Widget>[
-                _darkText('Max', context),
+                _darkText(
+                    '${widget.weeklyForecastForThisDay!.temperature2MMax}°C',
+                    context),
                 _divider(),
-                _darkText('Min', context),
+                _darkText(
+                    '${widget.weeklyForecastForThisDay!.temperature2MMin}°C',
+                    context),
               ],
             ),
           ),
@@ -167,7 +186,8 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
     );
   }
 
-  Widget _buildHourlyForecast(BuildContext context) {
+  Widget _buildHourlyForecast(
+      BuildContext context, AsyncSnapshot<DailyForecastDto> snapshot) {
     return Container(
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -222,5 +242,10 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
       thickness: 2,
       height: 10,
     );
+  }
+
+  String _extractTimeOutOfISODateString(String dateString) {
+    final date = DateTime.parse(dateString);
+    return '${date.hour}:${date.minute}';
   }
 }

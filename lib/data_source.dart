@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:weather_app/models/current_weather_dto.dart';
 import 'package:weather_app/models/daily_forecast_dto.dart';
 import 'package:weather_app/models/models.dart';
 
@@ -11,8 +12,8 @@ import 'models/weekly_forecast.dart';
 abstract class DataSource {
   Future<WeeklyForecastDto> getWeeklyForecast();
   Future<WeatherChartData> getChartData();
-  Future<DailyForecastDto> getDailyForecast(
-      DateTime date); // TODO: Implement hourly forecast
+  Future<DailyForecastDto> getHourlyForecast(DateTime date);
+  Future<CurrentWeatherDto> getCurrentWeather();
 }
 
 class FakeDataSource implements DataSource {
@@ -29,9 +30,15 @@ class FakeDataSource implements DataSource {
   }
 
   @override
-  Future<DailyForecastDto> getDailyForecast(DateTime date) async {
+  Future<DailyForecastDto> getHourlyForecast(DateTime date) async {
     final json = await rootBundle.loadString("assets/hourly_forecast.json");
     return DailyForecastDto.fromJson(jsonDecode(json));
+  }
+
+  @override
+  Future<CurrentWeatherDto> getCurrentWeather() async {
+    final json = await rootBundle.loadString("assets/current_weather.json");
+    return CurrentWeatherDto.fromJson(jsonDecode(json));
   }
 }
 
@@ -65,14 +72,21 @@ class RealDataSource implements DataSource {
   }
 
   @override
-  Future<DailyForecastDto> getDailyForecast(DateTime date) {
+  Future<DailyForecastDto> getHourlyForecast(DateTime date) {
     // TODO: implement getHourlyForecast
     throw UnimplementedError();
+  }
+
+  @override
+  Future<CurrentWeatherDto> getCurrentWeather() async {
+    final location = await Location.instance.getLocation();
+    final apiUrl = _getCurrentWeatherApiCall(location);
+    final response = await http.get(apiUrl);
+    return CurrentWeatherDto.fromJson(jsonDecode(response.body));
   }
 }
 
 Uri _getDailyApiCall(LocationData locationData, List<String> variables) {
-  // https://api.open-meteo.com/v1/forecast?latitude=55.4703&longitude=8.4519&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,daylight_duration&timezone=Europe%2FBerlin
   return Uri.https("api.open-meteo.com", '/v1/forecast', {
     'latitude': '${locationData.latitude}',
     'longitude': '${locationData.longitude}',
@@ -100,9 +114,9 @@ Uri _getHourlyApiCall(LocationData locationData) {
 
 Uri _getCurrentWeatherApiCall(LocationData locationData) {
   return Uri.https("api.open-meteo.com", '/v1/forecast', {
-     'latitude': '${locationData.latitude}',
+    'latitude': '${locationData.latitude}',
     'longitude': '${locationData.longitude}',
-    'current' : [
+    'current': [
       'weather_code',
       'temperature_2m',
       'relative_humidity',
