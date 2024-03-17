@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:weather_app/data_source.dart';
 
 import '../../models/models.dart';
+import '../../models/weekly_forecast.dart';
 import 'weather_sliver_app_bar.dart';
 import 'weekly_forecast_list.dart';
 
