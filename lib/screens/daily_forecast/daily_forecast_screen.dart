@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:weather_app/models/current_weather_dto.dart';
 import 'package:weather_app/models/daily_forecast_dto.dart';
 
 import '../../data_source.dart';
@@ -20,23 +21,55 @@ class DailyForecastScreen extends StatefulWidget {
 }
 
 class _DailyForecastScreenState extends State<DailyForecastScreen> {
-  final controller = StreamController<DailyForecastDto>();
+  final hourlyForecastController = StreamController<DailyForecastDto>();
+  final currentWeatherController = StreamController<CurrentWeatherDto>();
   LocationData? location;
 
   Future<void> loadForecast() async {
-    final future = context.read<DataSource>().getHourlyForecast(
+    // Get the hourly forecast for the selected day
+    final hourlyForecastFuture = context.read<DataSource>().getHourlyForecast(
         DateTime.parse(widget.weeklyForecastForThisDay!.time!));
-    controller.addStream(future.asStream());
-    await future;
-    location = await Location.instance.getLocation();
+
+    // Get the current forecast
+    final currentForecastFuture =
+        context.read<DataSource>().getCurrentWeather();
+
+    // Add both futures to the respective streams
+    hourlyForecastController.addStream(hourlyForecastFuture.asStream());
+    currentWeatherController.addStream(currentForecastFuture.asStream());
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator.adaptive(
       onRefresh: loadForecast,
+      child: Column(
+        children: [
+          _buildTopHalf(),
+          _buildBottomHalf(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomHalf() {
+    return Expanded(
       child: StreamBuilder(
-        stream: controller.stream,
+        stream: hourlyForecastController.stream,
+        builder: (context, snapshot) => CustomScrollView(
+          slivers: <Widget>[
+            SliverToBoxAdapter(
+                child: _buildHourlyForecast(context, snapshot.data)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopHalf() {
+    return Expanded(
+      child: StreamBuilder(
+        stream: currentWeatherController.stream,
         builder: (context, snapshot) => CustomScrollView(
           slivers: <Widget>[
             SliverToBoxAdapter(
@@ -53,11 +86,10 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     _spacer(),
-                    _buildFirstRow(context, snapshot),
+                    _buildFirstRow(context, snapshot.data),
                     _spacer(),
                     _buildDailyOverview(context, snapshot.data),
                     _spacer(),
-                    _buildHourlyForecast(context, snapshot),
                   ],
                 ),
               ),
@@ -69,7 +101,8 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
   }
 
   Widget _buildDailyOverview(
-      BuildContext context, DailyForecastDto? dailyForecast) {
+      BuildContext context, CurrentWeatherDto? currentWeatherDto) {
+    Current? current = currentWeatherDto?.current;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
@@ -105,9 +138,9 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _darkText("${"wind"} km/h", context),
+                      _darkText("${current?.windSpeed10M} km/h", context),
                       _divider(),
-                      _darkText("${"gusts"} km/h", context),
+                      _darkText("${current?.windGusts10M} km/h", context),
                     ],
                   ),
                 ),
@@ -116,9 +149,9 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _darkText('Precipation', context),
+                      _darkText("${current?.precipitation} mm", context),
                       _divider(),
-                      _darkText('Humidity', context),
+                      _darkText("${current?.relativeHumidity2M} %", context),
                     ],
                   ),
                 )
@@ -131,7 +164,7 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
   }
 
   Widget _buildFirstRow(
-      BuildContext context, AsyncSnapshot<DailyForecastDto> snapshot) {
+      BuildContext context, CurrentWeatherDto? currentWeather) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
       decoration: BoxDecoration(
@@ -187,7 +220,7 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
   }
 
   Widget _buildHourlyForecast(
-      BuildContext context, AsyncSnapshot<DailyForecastDto> snapshot) {
+      BuildContext context, DailyForecastDto? dailyForecastDto) {
     return Container(
       padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
