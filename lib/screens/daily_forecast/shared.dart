@@ -9,9 +9,9 @@ class SharedUtilityComponents {
     );
   }
 
-  Text darkText(String text, BuildContext context) {
+  Text darkText(String? text, BuildContext context) {
     return Text(
-      text,
+      text ?? '-',
       style:
           Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
     );
@@ -37,8 +37,10 @@ class SharedUtilityComponents {
     );
   }
 
-  String extractTimeOutOfISODateString(String dateString) {
-    final date = DateTime.parse(dateString);
-    return '${date.hour}:${date.minute}';
+  String extractTimeOutOfISODateString(String? dateString) {
+    if (dateString == null) {
+      return '--:--';
+    }
+    return dateString.substring(11, 16);
   }
 }

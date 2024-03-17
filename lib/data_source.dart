@@ -32,7 +32,7 @@ class FakeDataSource implements DataSource {
   @override
   Future<DailyForecastDto> getHourlyForecast(DateTime date) async {
     final json = await rootBundle.loadString("assets/hourly_forecast.json");
-    return DailyForecastDto.fromJson(jsonDecode(json));
+    return DailyForecastDto.fromJson(jsonDecode(json));;
   }
 
   @override

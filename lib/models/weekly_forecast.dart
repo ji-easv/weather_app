@@ -35,7 +35,7 @@ class WeeklyForecastDto {
     daily = json["daily"] == null ? null : Daily.fromJson(json["daily"]);
 
     for (int i = 0; i < daily!.time!.length; i++) {
-      dailyForecast!.add(ForecastForOneDay.fromDaily(daily!, i));
+      dailyForecast.add(ForecastForOneDay.fromDaily(daily!, i));
     }
   }
 

@@ -25,9 +25,12 @@ class HourlyForecastList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                _buildHourlyForecastItem(context),
-                _buildHourlyForecastItem(context),
-                _buildHourlyForecastItem(context),
+                _buildHourlyForecastItem(
+                    context, snapshot.data?.forecastForOneHourList[0]),
+                _buildHourlyForecastItem(
+                    context, snapshot.data?.forecastForOneHourList[1]),
+                _buildHourlyForecastItem(
+                    context, snapshot.data?.forecastForOneHourList[2]),
               ],
             ),
           ),
@@ -36,15 +39,20 @@ class HourlyForecastList extends StatelessWidget {
     );
   }
 
-  Widget _buildHourlyForecastItem(BuildContext context) {
+  Widget _buildHourlyForecastItem(
+      BuildContext context, ForecastForOneHour? forOneHour) {
     final SharedUtilityComponents shared = SharedUtilityComponents();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        shared.darkText('12:00', context),
-        shared.textWithIcon('45%', DailyForecastIcons.rainChance, context, 25),
-        shared.textWithIcon('7 km/h', DailyForecastIcons.wind, context, 25),
-        shared.textWithIcon('26', DailyForecastIcons.placeholder, context, 50)
+        shared.darkText(
+            shared.extractTimeOutOfISODateString(forOneHour?.time), context),
+        shared.textWithIcon("${forOneHour?.precipitationProbability}%",
+            DailyForecastIcons.rainChance, context, 20),
+        shared.textWithIcon("${forOneHour?.precipitationProbability} km/h",
+            DailyForecastIcons.wind, context, 25),
+        shared.textWithIcon("${forOneHour?.temperature2M}°C",
+            DailyForecastIcons.placeholder, context, 40)
       ],
     );
   }

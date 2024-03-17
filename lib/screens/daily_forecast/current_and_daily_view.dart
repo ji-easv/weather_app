@@ -26,7 +26,6 @@ class CurrentAndDailyOverview extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 60),
               Text('City Name',
                   style: Theme.of(context).textTheme.headlineLarge),
               Text(
@@ -34,7 +33,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               shared.spacer(),
-              _buildFirstRow(context, snapshot.data),
+              _buildTemperatureWidget(context, snapshot.data),
               shared.spacer(),
               _buildDailyOverview(context, snapshot.data),
             ],
@@ -44,7 +43,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
     );
   }
 
-  Widget _buildFirstRow(
+  Widget _buildTemperatureWidget(
       BuildContext context, CurrentWeatherDto? currentWeather) {
     final SharedUtilityComponents shared = SharedUtilityComponents();
     return Container(
