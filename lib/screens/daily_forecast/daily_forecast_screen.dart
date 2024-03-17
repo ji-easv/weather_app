@@ -33,8 +33,9 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
 
   Future<void> loadForecast() async {
     // Get the hourly forecast for the selected day
-    final hourlyForecastFuture =
-        context.read<DataSource>().getHourlyForecast(DateTime(2021, 10, 10));
+    final hourlyForecastFuture = context
+        .read<DataSource>()
+        .getHourlyForecast('2024-03-17');
 
     // Get the current forecast
     final currentForecastFuture =

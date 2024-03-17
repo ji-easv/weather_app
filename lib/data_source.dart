@@ -12,7 +12,7 @@ import 'models/weekly_forecast.dart';
 abstract class DataSource {
   Future<WeeklyForecastDto> getWeeklyForecast();
   Future<WeatherChartData> getChartData();
-  Future<DailyForecastDto> getHourlyForecast(DateTime date);
+  Future<DailyForecastDto> getHourlyForecast(String dateString);
   Future<CurrentWeatherDto> getCurrentWeather();
 }
 
@@ -30,9 +30,9 @@ class FakeDataSource implements DataSource {
   }
 
   @override
-  Future<DailyForecastDto> getHourlyForecast(DateTime date) async {
+  Future<DailyForecastDto> getHourlyForecast(String dateString) async {
     final json = await rootBundle.loadString("assets/hourly_forecast.json");
-    return DailyForecastDto.fromJson(jsonDecode(json));;
+    return DailyForecastDto.fromJson(jsonDecode(json));
   }
 
   @override
@@ -43,10 +43,28 @@ class FakeDataSource implements DataSource {
 }
 
 class RealDataSource implements DataSource {
+  LocationData locationData = LocationData.fromMap({
+    "latitude": 52.5200,
+    "longitude": 13.4050,
+    "accuracy": 0.0,
+    "altitude": 0.0,
+    "speed": 0.0,
+    "speed_accuracy": 0.0,
+    "heading": 0.0,
+    "time": 0.0
+  });
+
+  RealDataSource() {
+    getLocation();
+  }
+
+  Future<void> getLocation() async {
+    locationData = await Location.instance.getLocation();
+  }
+
   @override
   Future<WeeklyForecastDto> getWeeklyForecast() async {
-    final location = await Location.instance.getLocation();
-    final apiUrl = _getDailyApiCall(location, [
+    final apiUrl = _getDailyApiCall(locationData, [
       'weather_code',
       'temperature_2m_max',
       'temperature_2m_min',
@@ -64,17 +82,22 @@ class RealDataSource implements DataSource {
 
   @override
   Future<WeatherChartData> getChartData() async {
-    final location = await Location.instance.getLocation();
     final apiUrl = _getDailyApiCall(
-        location, ['temperature_2m_max', 'temperature_2m_min']);
+        locationData, ['temperature_2m_max', 'temperature_2m_min']);
     final response = await http.get(apiUrl);
     return WeatherChartData.fromJson(jsonDecode(response.body));
   }
 
   @override
-  Future<DailyForecastDto> getHourlyForecast(DateTime date) {
-    // TODO: implement getHourlyForecast
-    throw UnimplementedError();
+  Future<DailyForecastDto> getHourlyForecast(String dateString) async {
+    final apiUrl = _getHourlyApiCall(locationData, dateString);
+    final response = await http.get(apiUrl);
+
+    if (response.statusCode == 200) {
+      return DailyForecastDto.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load hourly forecast');
+    }
   }
 
   @override
@@ -96,7 +119,7 @@ Uri _getDailyApiCall(LocationData locationData, List<String> variables) {
   });
 }
 
-Uri _getHourlyApiCall(LocationData locationData) {
+Uri _getHourlyApiCall(LocationData locationData, String dateString) {
   return Uri.https("api.open-meteo.com", '/v1/forecast', {
     'latitude': '${locationData.latitude}',
     'longitude': '${locationData.longitude}',
@@ -106,9 +129,10 @@ Uri _getHourlyApiCall(LocationData locationData) {
       'weather_code',
       'wind_speed_10m',
     ],
-    'wind_speed_unit': 'km/h',
+    'wind_speed_10m': 'km/h',
     'timezone': 'Europe/Berlin',
-    'forecast_days': '1'
+    'start_date': dateString,
+    'end_date': dateString
   });
 }
 
@@ -119,8 +143,8 @@ Uri _getCurrentWeatherApiCall(LocationData locationData) {
     'current': [
       'weather_code',
       'temperature_2m',
-      'relative_humidity',
-      'precipation',
+      'relative_humidity_2m',
+      'precipitation',
       'wind_speed_10m',
       'wind_gusts_10m',
     ]

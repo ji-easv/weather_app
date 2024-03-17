@@ -20,13 +20,17 @@ class HourlyForecastList extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: SharedUtilityComponents().getCardDecoration(),
-            child: Column(
-              children: snapshot.data?.forecastForOneHourList
-                      .map((forecast) =>
-                          _buildHourlyForecastItem(context, forecast))
-                      .toList() ??
-                  [],
-            ),
+            child: snapshot.hasData
+                ? Column(
+                    children: snapshot.data?.forecastForOneHourList
+                            .map((forecast) =>
+                                _buildHourlyForecastItem(context, forecast))
+                            .toList() ??
+                        [],
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
           ),
         ),
       ),

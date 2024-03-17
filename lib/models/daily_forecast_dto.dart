@@ -37,7 +37,6 @@ class DailyForecastDto {
     for (int i = 0; i < hourly!.time!.length; i++) {
       forecastForOneHourList.add(ForecastForOneHour.fromHourly(hourly!, i));
     }
-    print(forecastForOneHourList.length);
   }
 
   Map<String, dynamic> toJson() {
