@@ -43,58 +43,60 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
   Widget build(BuildContext context) {
     return RefreshIndicator.adaptive(
       onRefresh: loadForecast,
-      child: Column(
-        children: [
+      child: CustomScrollView(
+        slivers: [
           _buildTopHalf(),
-          _buildBottomHalf(),
+          _buildHourlyForecast(),
         ],
       ),
     );
   }
 
-  Widget _buildBottomHalf() {
-    return Expanded(
-      child: StreamBuilder(
-        stream: hourlyForecastController.stream,
-        builder: (context, snapshot) => CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-                child: _buildHourlyForecast(context, snapshot.data)),
-          ],
+  Widget _buildHourlyForecast() {
+    return StreamBuilder(
+      stream: hourlyForecastController.stream,
+      builder: (context, snapshot) => SliverToBoxAdapter(
+        child: Container(
+          padding: EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: Colors.grey[200],
+          ),
+          child: Column(
+            children: [
+              _buildHourlyForecastItem(context),
+              _buildHourlyForecastItem(context),
+              _buildHourlyForecastItem(context),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildTopHalf() {
-    return Expanded(
-      child: StreamBuilder(
-        stream: currentWeatherController.stream,
-        builder: (context, snapshot) => CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 60),
-                    Text('City Name',
-                        style: Theme.of(context).textTheme.headlineLarge),
-                    Text(
-                      widget.weeklyForecastForThisDay!.time!,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    _spacer(),
-                    _buildFirstRow(context, snapshot.data),
-                    _spacer(),
-                    _buildDailyOverview(context, snapshot.data),
-                    _spacer(),
-                  ],
-                ),
+    return StreamBuilder(
+      stream: currentWeatherController.stream,
+      builder: (context, snapshot) => SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 60),
+              Text('City Name',
+                  style: Theme.of(context).textTheme.headlineLarge),
+              Text(
+                widget.weeklyForecastForThisDay!.time!,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
-            ),
-          ],
+              _spacer(),
+              _buildFirstRow(context, snapshot.data),
+              _spacer(),
+              _buildDailyOverview(context, snapshot.data),
+              _spacer(),
+            ],
+          ),
         ),
       ),
     );
@@ -216,24 +218,6 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
       text,
       style:
           Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
-    );
-  }
-
-  Widget _buildHourlyForecast(
-      BuildContext context, DailyForecastDto? dailyForecastDto) {
-    return Container(
-      padding: EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: Colors.grey[200],
-      ),
-      child: Column(
-        children: [
-          _buildHourlyForecastItem(context),
-          _buildHourlyForecastItem(context),
-          _buildHourlyForecastItem(context),
-        ],
-      ),
     );
   }
 
