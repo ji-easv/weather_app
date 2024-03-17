@@ -3,6 +3,7 @@ import 'package:weather_app/models/models.dart';
 
 import '../../models/weekly_forecast.dart';
 import '../daily_forecast/daily_forecast_screen.dart';
+import '../shared.dart';
 
 class WeeklyForecastList extends StatelessWidget {
   final WeeklyForecastDto weeklyForecastDto;
@@ -74,11 +75,14 @@ class WeeklyForecastList extends StatelessWidget {
   Widget _buildImageOverlay(
       BuildContext context, TextTheme textTheme, int index) {
     final imageSize = MediaQuery.of(context).size.width * 0.27;
+    final SharedUtilityComponents shared = SharedUtilityComponents();
     return SizedBox(
       height: imageSize,
       width: imageSize,
-      child: _getImageByWeatherCode(
-          weeklyForecastDto.daily!.weatherCode!.elementAt(index)),
+      child: Image.network(
+          shared.getImageUrlByWeatherCode(
+              weeklyForecastDto.daily!.weatherCode!.elementAt(index)),
+          fit: BoxFit.cover),
       /* child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -115,86 +119,5 @@ class WeeklyForecastList extends StatelessWidget {
       DateTime.sunday => 'Sunday',
       _ => ''
     };
-  }
-
-  Image _getImageByWeatherCode(int weatherCode) {
-    String url = '';
-    switch (weatherCode) {
-      // Clear
-      case 0:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-01-1024.png';
-        break;
-
-      // Mainly clear, partly cloudy
-      case 1:
-      case 2:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-02-512.png';
-        break;
-      // Overcast
-      case 3:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-22-512.png';
-        break;
-
-      // Fog
-      case 45:
-      case 48:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-27-1024.png';
-        break;
-
-      // Drizzle
-      case 51:
-      case 53:
-      case 55:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-30-512.png';
-        break;
-
-      // Freezing drizzle
-      case 56:
-      case 57:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-30-512.png';
-        break;
-
-      // Rain slight and moderate intensity
-      case 61:
-      case 63:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-31-512.png';
-        break;
-
-      // Rain heavy intensity and freezing rain
-      case 65:
-      case 66:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-32-512.png';
-        break;
-
-      // Snow
-      case 71:
-      case 73:
-      case 75:
-      case 77:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-24-1024.png';
-        break;
-
-      // Thunderstorm
-      case 95:
-      case 96:
-      case 99:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-08-1024.png';
-        break;
-
-      default:
-        url =
-            'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-02-512.png';
-    }
-    return Image.network(url, fit: BoxFit.cover);
   }
 }

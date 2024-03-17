@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/data_source.dart';
+import 'package:weather_app/screens/shared.dart';
 
 import '../../models/weekly_forecast.dart';
-import 'weather_sliver_app_bar.dart';
+import '../../weather_sliver_app_bar.dart';
 import 'weekly_forecast_list.dart';
 
 class WeeklyForecastScreen extends StatefulWidget {
@@ -32,43 +33,22 @@ class _WeeklyForecastScreenState extends State<WeeklyForecastScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SharedUtilityComponents shared = SharedUtilityComponents();
     return RefreshIndicator.adaptive(
       onRefresh: loadForecast,
       child: StreamBuilder(
         stream: controller.stream,
         builder: (context, snapshot) => CustomScrollView(
           slivers: <Widget>[
-            const WeatherSliverAppBar(),
+            const WeatherSliverAppBar(title: 'Weekly Forecast'),
             if (snapshot.hasData)
               WeeklyForecastList(weeklyForecastDto: snapshot.data!)
             else if (snapshot.hasError)
-              _buildErrorWidget(context, snapshot.error!)
+              shared.buildErrorWidget(context, snapshot.error!)
             else
-              _buildLoadingWidget(context)
+              shared.buildLoadingWidget(context)
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildErrorWidget(BuildContext context, Object error) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          'Error loading forecast: $error',
-          style: TextStyle(
-              fontSize: 24, color: Theme.of(context).colorScheme.error),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingWidget(BuildContext context) {
-    return const SliverFillRemaining(
-      hasScrollBody: false,
-      child: Center(
-        child: CircularProgressIndicator.adaptive(),
       ),
     );
   }

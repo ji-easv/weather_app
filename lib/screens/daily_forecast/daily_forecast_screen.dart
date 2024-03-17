@@ -9,7 +9,7 @@ import 'package:weather_app/screens/daily_forecast/hourly_forecast.dart';
 
 import '../../data_source.dart';
 import '../../models/weekly_forecast.dart';
-import '../weekly_forecast/weather_sliver_app_bar.dart';
+import '../../weather_sliver_app_bar.dart';
 
 class DailyForecastScreen extends StatefulWidget {
   final ForecastForOneDay?
@@ -24,6 +24,12 @@ class DailyForecastScreen extends StatefulWidget {
 class _DailyForecastScreenState extends State<DailyForecastScreen> {
   final hourlyForecastController = StreamController<DailyForecastDto>();
   final currentWeatherController = StreamController<CurrentWeatherDto>();
+
+  @override
+  void initState() {
+    super.initState();
+    loadForecast();
+  }
 
   Future<void> loadForecast() async {
     // Get the hourly forecast for the selected day
@@ -45,7 +51,7 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
       onRefresh: loadForecast,
       child: CustomScrollView(
         slivers: [
-          const WeatherSliverAppBar(),
+          const WeatherSliverAppBar(title: 'Daily Forecast'),
           CurrentAndDailyOverview(
             currentWeatherController: currentWeatherController,
             weeklyForecastForThisDay: widget.weeklyForecastForThisDay!,

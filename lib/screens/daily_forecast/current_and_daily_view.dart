@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../frontend_constants.dart';
 import '../../models/current_weather_dto.dart';
 import '../../models/weekly_forecast.dart';
-import 'shared.dart';
+import '../shared.dart';
 
 class CurrentAndDailyOverview extends StatelessWidget {
   final StreamController<CurrentWeatherDto> currentWeatherController;
@@ -63,7 +63,9 @@ class CurrentAndDailyOverview extends StatelessWidget {
                   height: 100,
                   width: 100,
                   child: Image.network(
-                      'https://cdn2.iconfinder.com/data/icons/weather-color-2/500/weather-01-1024.png'),
+                    shared.getImageUrlByWeatherCode(
+                        weeklyForecastForThisDay.weatherCode!),
+                  ),
                 ),
                 Text(
                   '26',

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:weather_app/screens/daily_forecast/shared.dart';
+import 'package:weather_app/screens/shared.dart';
 
 import '../../frontend_constants.dart';
 import '../../models/daily_forecast_dto.dart';
@@ -51,8 +51,11 @@ class HourlyForecastList extends StatelessWidget {
             DailyForecastIcons.rainChance, context, 20),
         shared.textWithIcon("${forOneHour?.precipitationProbability} km/h",
             DailyForecastIcons.wind, context, 25),
-        shared.textWithIcon("${forOneHour?.temperature2M}°C",
-            DailyForecastIcons.placeholder, context, 40)
+        shared.textWithIcon(
+            "${forOneHour?.temperature2M}°C",
+            shared.getImageUrlByWeatherCode(forOneHour?.weatherCode ?? 0),
+            context,
+            40)
       ],
     );
   }
