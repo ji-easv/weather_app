@@ -24,14 +24,10 @@ class HourlyForecastList extends StatelessWidget {
               color: Colors.grey[200],
             ),
             child: Column(
-              children: [
-                _buildHourlyForecastItem(
-                    context, snapshot.data?.forecastForOneHourList[0]),
-                _buildHourlyForecastItem(
-                    context, snapshot.data?.forecastForOneHourList[1]),
-                _buildHourlyForecastItem(
-                    context, snapshot.data?.forecastForOneHourList[2]),
-              ],
+              children: snapshot.data!.forecastForOneHourList
+                  .map(
+                      (forecast) => _buildHourlyForecastItem(context, forecast))
+                  .toList(),
             ),
           ),
         ),
@@ -49,7 +45,7 @@ class HourlyForecastList extends StatelessWidget {
             shared.extractTimeOutOfISODateString(forOneHour?.time), context),
         shared.textWithIcon("${forOneHour?.precipitationProbability}%",
             DailyForecastIcons.rainChance, context, 20),
-        shared.textWithIcon("${forOneHour?.precipitationProbability} km/h",
+        shared.textWithIcon("${forOneHour?.windSpeed10M} km/h",
             DailyForecastIcons.wind, context, 25),
         shared.textWithIcon(
             "${forOneHour?.temperature2M}°C",
