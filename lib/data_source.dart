@@ -44,8 +44,8 @@ class FakeDataSource implements DataSource {
 
 class RealDataSource implements DataSource {
   LocationData locationData = LocationData.fromMap({
-    "latitude": 52.5200,
-    "longitude": 13.4050,
+    "latitude": 55.4765,
+    "longitude": 8.4594,
     "accuracy": 0.0,
     "altitude": 0.0,
     "speed": 0.0,

@@ -51,7 +51,7 @@ class HourlyForecastList extends StatelessWidget {
             DailyForecastIcons.wind, context, 25),
         shared.textWithIcon(
             "${forOneHour?.temperature2M}°C",
-            shared.getImageUrlByWeatherCode(forOneHour?.weatherCode ?? 0),
+            shared.getImageUrlByWeatherCode(forOneHour!.weatherCode!),
             context,
             40)
       ],

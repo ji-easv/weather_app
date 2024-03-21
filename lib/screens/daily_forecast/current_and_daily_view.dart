@@ -64,7 +64,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '26',
+                  '${currentWeather?.current?.temperature2M}°C',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         color: Colors.black,
                       ),

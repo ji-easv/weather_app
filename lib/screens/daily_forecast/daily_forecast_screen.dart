@@ -35,7 +35,7 @@ class _DailyForecastScreenState extends State<DailyForecastScreen> {
     // Get the hourly forecast for the selected day
     final hourlyForecastFuture = context
         .read<DataSource>()
-        .getHourlyForecast('2024-03-17');
+        .getHourlyForecast(widget.weeklyForecastForThisDay!.time!);
 
     // Get the current forecast
     final currentForecastFuture =
