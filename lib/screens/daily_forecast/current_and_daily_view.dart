@@ -26,15 +26,7 @@ class CurrentAndDailyOverview extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Esbjerg', style: Theme.of(context).textTheme.headlineLarge),
-              Text(
-                weeklyForecastForThisDay.time!,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              shared.spacer(),
-              _buildTemperatureWidget(context, snapshot.data),
-              shared.spacer(),
-              _buildDailyOverview(context, snapshot.data),
+              _getWidgetContent(context, snapshot),
             ],
           ),
         ),
@@ -147,6 +139,33 @@ class CurrentAndDailyOverview extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  _getWidgetContent(
+      BuildContext context, AsyncSnapshot<CurrentWeatherDto> snapshot) {
+    if (!snapshot.hasData) {
+      return const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [CircularProgressIndicator.adaptive()],
+      );
+    }
+
+    final SharedUtilityComponents shared = SharedUtilityComponents();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('Esbjerg', style: Theme.of(context).textTheme.headlineLarge),
+        Text(
+          weeklyForecastForThisDay.time!,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        shared.spacer(),
+        _buildTemperatureWidget(context, snapshot.data),
+        shared.spacer(),
+        _buildDailyOverview(context, snapshot.data),
+      ],
     );
   }
 }
